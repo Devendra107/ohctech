@@ -68,7 +68,8 @@ import LinearProgress from "@mui/material/LinearProgress";
 
     if (isLoggedIn) {
       setIsLoading(false);
-      navigate("/ohcSelection");
+      // navigate("/ohcSelection");
+      navigate("/roleSelection");
     } else {
       setIsLoading(false);
     }

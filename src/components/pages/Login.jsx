@@ -50,6 +50,7 @@ const Login = () => {
     if (isLoggedIn) {
       setIsLoading(false);
       navigate("/ohcSelection");
+      navigate("/roleSelection");
     } else {
       setIsLoading(false);
     }

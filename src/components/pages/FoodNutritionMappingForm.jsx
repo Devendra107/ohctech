@@ -97,13 +97,13 @@ const FoodNutritionMappingForm = ({
                 <SingleSelect
                     arr={foodname}
                     label="Food Name"
-                    name="foodMasterId"
-                    value={values.foodMasterId}
+                    name="foodMaster"
+                    value={values.foodMaster}
                     sx={{ width: '250px' }}
                     // onChange={(event, newValue) => {
                     //   const syntheticEvent = {
                     //     target: {
-                    //       name: "foodMasterId",
+                    //       name: "foodMaster",
                     //       value: newValue,
                     //     },
                     //   };
@@ -112,14 +112,14 @@ const FoodNutritionMappingForm = ({
                     // handleChange ={handleChange}
 
                     onChange={(event, newValue) => {
-                      setFieldValue('foodMasterId', newValue ? newValue.value : '');
+                      setFieldValue('foodMaster', newValue ? newValue.label : '');
                     }}
 
                     onBlur={handleBlur}
                     type="text"
                     helperText={
-                      errors.foodMasterId && touched.foodMasterId ? (
-                        <span style={{ color: "red" }}>{errors.foodMasterId}</span>
+                      errors.foodMaster && touched.foodMaster ? (
+                        <span style={{ color: "red" }}>{errors.foodMaster}</span>
                       ) : null
                     }
                   />

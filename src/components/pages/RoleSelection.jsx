@@ -71,7 +71,12 @@ const RoleSelection = () => {
     }
 
     updateSessionData({ roleId: id });
-    navigate("/AdminDashboard");
+    if(id == 5){
+      navigate("/LandingPageList");
+    }else{
+      navigate("/AdminDashboard");
+    }
+    
   };
 
   //  Ending

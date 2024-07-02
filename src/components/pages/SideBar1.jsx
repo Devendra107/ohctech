@@ -310,7 +310,7 @@ const SidebarMap = {
       </ListItem>
       <Divider /> */}
       <List>
-      {data.map((item, index) => (
+      {data.length>0 && data.map((item, index) => (
         <React.Fragment key={item.Id}>
           <ListItem disablePadding onClick={() => handleCollapse(index)}>
             <ListItemButton>

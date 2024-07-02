@@ -49,25 +49,25 @@ const RoleList = () => {
   } = useFormik({
     initialValues: initialValues,
     // validationSchema: roleValidationForm,
-    onSubmit: (values, action) => {
-      console.log(values);
-      action.resetForm();
-    },
-    // onSubmit: async (values, {resetForm}) => {
-    //   try {
-    //        await axiosClientPrivate.post('/roles', values);
-    //       toast.success("Saved Successfully!",{
-    //         position:"top-center"
-    //      });
-    //       // setRowData(prevRowData => [...prevRowData, values]);
-    //       setFetchTrigger(prev => prev+1);
+    // onSubmit: (values, action) => {
+    //   console.log(values);
+    //   action.resetForm();
+    // },
+    onSubmit: async (values, {resetForm}) => {
+      try {
+           await axiosClientPrivate.post('/roles', values);
+          toast.success("Saved Successfully!",{
+            position:"top-center"
+         });
+          // setRowData(prevRowData => [...prevRowData, values]);
+          setFetchTrigger(prev => prev+1);
 
-    //       resetForm();
-    //     } catch (error) {
-    //       console.log(values);
-    //       console.error('Error:', error);
-    //     }
-    //   },
+          resetForm();
+        } catch (error) {
+          console.log(values);
+          console.error('Error:', error);
+        }
+      },
 
 
   });

@@ -51,14 +51,20 @@ const FoodNutritionMappingList = () => {
 
     const [nutrientmap,setNutrientmap] = useState({});
 
+    const [nutrientpair,setNutrientpair] = useState({});
+
+    // const [initialvalues,setInitialvalues]  = useState({});
 
         // console.log("intit",nutrient);
     const initialValues = nutrient.reduce((values, item) => {
       values[item.label] = "";
         return values;
-      }, { foodMasterId : "",
-        lastModified: "",
-        modifiedBy: ""});
+      }, { 
+       foodMaster : "",
+       modifiedBy: "",
+    });
+
+    // console.log("initialiatvalues",initialValues);
 
       // initialValues = {
       //     foodMasterId : "",
@@ -82,49 +88,100 @@ const FoodNutritionMappingList = () => {
       } = useFormik({
         initialValues: initialValues,
         // validationSchema: validationSchema,
-        onSubmit: (values) => {
-          console.log(" value",values);
+        // onSubmit: (values) => {
 
+        
 
-        //  delete values.undefined
-          //  const nutrientValues = {};
+        //     const fooddish = foodname.find(item => item.label === values.foodMaster);
+        //     const dishid = fooddish ? fooddish.value : null;
+        //     values['foodMasterId'] = values.foodMaster;
+        //     delete values.foodMaster;
+        //     values.foodMasterId = dishid;
 
-          //  console.log(values["Protein"]);
-
-          //  for (const key in values) {
-          //       nutrientValues[nutrientmap[key]] = values[key];
-          //   }
-
-          //   delete nutrientValues.undefined
-          //   console.log("final value",nutrientValues);
-            // console.log("final value",values);
+        // //   console.log("values",values);
             
-          },
-          // onSubmit: async (values, {resetForm}) => {
-          //    console.log(values);
-          //    resetForm();
-          //   try {
-          //       const response = await axiosClientPrivate.post('/foodnutrients', values);
-          //       toast.success("Saved Successfully!",{
-          //           position:"top-center"
-          //        });  
-          //              // getting id(key,value) of last index
-          //       //     const id = rowData[rowData.length-1].buId;
-          //       //     const obj = {
-          //       //         buId : id+1,
-          //       //         ...values
-          //       //     }
-          //       //  console.log(obj);
-          //       //  setRowData(rowData => [...rowData, obj]);
-          //       setFetchTrigger(prev => prev+1);
+        //         const nutrientVal = {};
 
-          //       console.log('Response:', response.data);
-          //       resetForm();
-          //     } catch (error) {
-          //       console.log(values);
-          //       console.error('Error:', error);
-          //     }
-          //   },
+        //         for (const key in values) {
+        //         if(nutrientmap[key]){
+        //             nutrientVal[nutrientmap[key]] = values[key];
+        //         }
+        //         }
+
+
+
+
+        //     for (const key in values) {
+        //         if (key !== "foodMasterId" && key !== "modifiedBy") {
+        //           delete values[key];
+        //         }
+        //       }
+
+              
+        //     values['nutrientValues'] = nutrientVal;
+        //     values.nutrientValues = nutrientVal;
+        //     console.log("nutiren mapping",nutrientVal);
+        //     console.log("values",values);
+          
+            
+        //   },
+          onSubmit: async (values, {resetForm}) => {
+            //  console.log(values);
+
+            const fooddish = foodname.find(item => item.label === values.foodMaster);
+            const dishid = fooddish ? fooddish.value : null;
+            values['foodMasterId'] = values.foodMaster;
+            delete values.foodMaster;
+            values.foodMasterId = dishid;
+
+        //   console.log("values",values);
+            
+                const nutrientVal = {};
+
+                for (const key in values) {
+                if(nutrientmap[key]){
+                    nutrientVal[nutrientmap[key]] = values[key];
+                }
+                }
+
+
+
+
+            for (const key in values) {
+                if (key !== "foodMasterId" && key !== "modifiedBy") {
+                  delete values[key];
+                }
+              }
+
+              
+            values['nutrientValues'] = nutrientVal;
+            values.nutrientValues = nutrientVal;
+            console.log("nutiren mapping",nutrientVal);
+            console.log("values",values);
+
+             resetForm();
+            try {
+                const response = await axiosClientPrivate.post('/nutrients', values);
+                toast.success("Saved Successfully!",{
+                    position:"top-center"
+                 });  
+                       // getting id(key,value) of last index
+                //     const id = rowData[rowData.length-1].buId;
+                //     const obj = {
+                //         buId : id+1,
+                //         ...values
+                //     }
+                //  console.log(obj);
+                //  setRowData(rowData => [...rowData, obj]);
+                setFetchTrigger(prev => prev+1);
+
+                console.log('Response:', response.data);
+                resetForm();
+              } catch (error) {
+                console.log(values);
+                console.error('Error:', error);
+              }
+            },
       });
 
       // console.log("is empty1 ",values);
@@ -175,17 +232,17 @@ const FoodNutritionMappingList = () => {
             try {
                 const response = await axiosClientPrivate.get('http://localhost:8080/nutrient-masters', { signal: controller.signal });
                 const items = response.data.content;
-                    console.log("food name :-",items);
-    
-                    // const newDiagnosisMap = new Map();
-                    // items.forEach(item => newDiagnosisMap.set(item.ailmentSysName, item.id));
-                    // setBodysystem(newDiagnosisMap);
-    
-                    // console.log(diagnosisMap.size);
-                    // const ailment = items.map((item)=>{
-                    //   // diagnosisMap.set(item.id,item.ailmentSysName);
-                    //   return item.ailmentSysName;
-                    // });
+                    // console.log("food name :-",items);
+
+                      // this for dynamic header (1 : protein)
+                      const nutrient = {};
+                      items.forEach(item => {
+                        nutrient[item.id] = item.nutrientName;
+                      });
+
+                      setNutrientpair(nutrient);
+
+
 
                     const nutrientMap = {};
                       items.forEach(item => {
@@ -225,7 +282,7 @@ const FoodNutritionMappingList = () => {
     alert(id)
    if(window.confirm('Are you sure you want to delete this data?')){
    try {
-       await axiosClientPrivate.delete(`/sections/${id}`);
+       await axiosClientPrivate.delete(`/nutrients/${id}`);
     //    setRowData(prevData => prevData.filter(row => row.id !== id));
     setFetchTrigger(prev => prev+1);
 
@@ -255,29 +312,107 @@ const CustomActionComponent = ({id}) => {
 
         const getAllOhc = async () => {
             try {
-                const response = await axiosClientPrivate.get(`http://localhost:8080/sections?page=${0}&size=${3}`, { signal: controller.signal });
+                const response = await axiosClientPrivate.get(`http://localhost:8080/nutrients?page=${0}&size=${22}`, { signal: controller.signal });
                 const items = response.data.content;
-                    console.log(items);
-                    console.log(response.data);
+                    console.log("before ",items);
+                    
+                       // to make arr in key value pair
+                    const flattenNutrientValues = (items) => {
+                      return items.map(item => {
+                          const nutrientValues = item.nutrientValues;
+                          const flatNutrientValues = {};
+                  
+                          Object.keys(nutrientValues).forEach(key => {
+                              flatNutrientValues[key] = nutrientValues[key];
+                          });
+                  
+                          return {
+                              ...item,
+                              ...flatNutrientValues,
+                          };
+                      });
+                  };
+
+                  const flattenedItems = flattenNutrientValues(items);
+                  // const initialNutrientKeys = Object.keys(initialItems[0].nutrientValues);
+                  console.log("after ",flattenedItems);
+
+                    // helful for dynamically header
+                //   const findIndexWithMostNutrientPairs = (items) => {
+                //     let maxPairs = 0;
+                //     let maxIndex = -1;
+                //     items.forEach((item, index) => {
+                //         const numPairs = Object.keys(item.nutrientValues).length;
+                //         if (numPairs > maxPairs) {
+                //             maxPairs = numPairs;
+                //             maxIndex = index;
+                //         }
+                //     });
+                //     return maxIndex;
+                // };
+                const findIndexWithMostNutrientPairs = (items) => {
+                  return items.reduce((maxIndex, item, index) => {
+                      const numPairs = Object.keys(item.nutrientValues).length;
+                      return numPairs > (items[maxIndex]?.nutrientValues?.length || 0) ? index : maxIndex;
+                  }, 0);
+              };
+
+                const max  = findIndexWithMostNutrientPairs(flattenedItems);
+
+                const initialNutrientKeys = Object.keys(flattenedItems[max].nutrientValues);  //generating key value pair dynamically
+
+                // food name
+                 
+                if(foodname.length>0){
+                  // items.forEach(obj => {
+                  //     obj.unitId = unit.find(item => item.value == parseInt(obj.unitId)).label;
+                  //   });
+                  flattenedItems.forEach(obj => {
+                      const foundItem = foodname.find(item => item.value == parseInt(obj.foodMasterId));
+                      if (foundItem) {
+                          obj.foodMasterId = foundItem.label;
+                      } 
+                  });
+              }
+              else{
+                  console.log("Not found!");
+              }
+              
                 
                 if (items.length > 0) {
 
                     const headerMappings = {
-                        buId: "BuId",
-                        deptId : "Dept Id",
-                        sectionName : "SectionName",
-                        sectionHeadName : "Section Head Name",
-                        sectionHeadEmail : "Section Head Email",
+                      foodMasterId: 'Food name',
+                      id: 'Id',
+                      modifiedBy: 'Modified By',
+                      ...Object.fromEntries(initialNutrientKeys.map(key => [key, nutrientpair[key]]))
+                      
                     };
 
-                    const  columns = Object.keys(items[0]).map(key => ({
-                        field: key,
-                        headerName: headerMappings[key] || key.charAt(0).toUpperCase() + key.slice(1),
-                        filter: true,
-                        floatingFilter: true,
-                        sortable: true,
-                        width: key === 'id' ? 100 : undefined,
-                    }));
+                    console.log("checking header",headerMappings);
+                    // old code
+                    // const  columns = Object.keys(flattenedItems[0]).map(key => ({
+                    //     field: key,
+                    //     headerName: headerMappings[key] || key.charAt(0).toUpperCase() + key.slice(1),
+                    //     filter: true,
+                    //     floatingFilter: true,
+                    //     sortable: true,
+                    //     width: key === 'id' ? 100 : undefined,
+                    // }));
+
+                    const columns = [
+                      { field: 'id', headerName: headerMappings['id'], filter: true, floatingFilter: true, sortable: true, width: 100 },
+                      { field: 'foodMasterId', headerName: headerMappings['foodMasterId'], filter: true, floatingFilter: true, sortable: true, width: 150 },
+                      ...Object.keys(flattenedItems[max])
+                          .filter(key => key !== 'id' && key !== 'foodMasterId')
+                          .map(key => ({
+                              field: key,
+                              headerName: headerMappings[key] || key.charAt(0).toUpperCase() + key.slice(1),
+                              filter: true,
+                              floatingFilter: true,
+                              sortable: true,
+                          }))
+                  ];
 
                     columns.unshift({
                         field: "Actions", cellRenderer:  (params) =>{
@@ -289,7 +424,7 @@ const CustomActionComponent = ({id}) => {
                     setColDefs(columns);
                 }
 
-                setRowData(items);
+                setRowData(flattenedItems);
 
             } catch (err) {
                 console.error("Failed to fetch data: ", err);
@@ -305,19 +440,30 @@ const CustomActionComponent = ({id}) => {
 
     }, [fetchTrigger]);
 
+
     const handleEdit = async (id) => {
         alert(id);
         try {
-          const response = await axiosClientPrivate.get(`/sections/${id}`);
-            console.log(response.data);
-            setFieldValue("id",response.data.id);
-            setFieldValue("buId",response.data.businessUnit.id);
-            setFieldValue("deptId",response.data.department.id);
-            setFieldValue("sectionName",response.data.sectionName);
-            setFieldValue("sectionHeadName",response.data.sectionHeadName);
-            setFieldValue("sectionHeadEmail",response.data.sectionHeadName);
-            setFieldValue("lastModified", response.data.lastModified);
-            setFieldValue("modifiedBy", response.data.modifiedBy);
+          const response = await axiosClientPrivate.get(`/nutrients/${id}`);
+            console.log("for update",response.data);
+
+            values.id = response.data.id;
+            const updateDish = foodname.find(item => item.value == parseInt(response.data.foodMasterId)).label;
+            values.foodMaster = String(updateDish);
+
+                setFieldValue('id', response.data.id);
+                setFieldValue('foodMaster',  String(updateDish));
+                setFieldValue('modifiedBy', response.data.modifiedBy);
+
+                // Set nutrient values dynamically
+                Object.entries(response.data.nutrientValues).forEach(([key, value]) => {
+                  const fieldName = nutrientpair[key];
+                  if (fieldName) {
+                      setFieldValue(fieldName, value);
+                  }
+                });
+              // console.log("check values",values);
+
             setId(id);
             setShowupdate(true);
             setOpenPopup(true);
@@ -329,11 +475,15 @@ const CustomActionComponent = ({id}) => {
 
       const handleUpdate = async (id)=> {
         alert(id);
-        console.log(values);
+        // console.log(values);
+
+        values.foodMasterId = foodname.find(item => item.label == String(values.foodMaster)).value;
+        delete values.foodMaster;
+        delete values.undefined;
         const update = values;
         try{
             //  console.log(values);
-             await axiosClientPrivate.put(`/sections/${id}`,update);
+             await axiosClientPrivate.put(`/nutrients/${id}`,update);
              toast.success("Updated Successfully!",{
                 position:"top-center",
                 autoClose: 3000,
@@ -452,7 +602,7 @@ const CustomActionComponent = ({id}) => {
                 />
             </Box>
 
-            <Popup showupdate={showupdate} id= {id} handleUpdate={handleUpdate} setShowupdate={setShowupdate} resetForm={resetForm} handleSubmit={handleSubmit}  openPopup={openPopup} setOpenPopup={setOpenPopup} title="Food Nutrition mapping form">
+            <Popup showupdate={showupdate} id= {id} handleUpdate={handleUpdate} setShowupdate={setShowupdate} resetForm={resetForm} handleSubmit={handleSubmit}  openPopup={openPopup} setOpenPopup={setOpenPopup} title="Food Nutrition mapping for 100g">
 
                 <FoodNutritionMappingForm nutrient={nutrient} foodname={foodname}  values={values} touched={touched} errors={errors} handleBlur={handleBlur} handleChange={handleChange} setFieldValue={setFieldValue} handleSubmit={handleSubmit} />
                 

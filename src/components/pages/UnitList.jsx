@@ -131,7 +131,7 @@ const UnitList = () => {
 
      // to delete a row
      const handleDeleteRow = async (id) => {
-        // alert(id)
+        alert(id)
        if(window.confirm('Are you sure you want to delete this data?')){
        try {
            await axiosClientPrivate.delete(`/checkup-parameter-units/${id}`);
